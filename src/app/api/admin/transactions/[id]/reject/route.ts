@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
-import { sendEmail, emailTemplates } from '@/lib/email'
+// import { sendEmail, emailTemplates } from '@/lib/email'
 import { transactions } from '@/lib/transactions'
 
 export async function POST(
@@ -65,18 +65,19 @@ export async function POST(
 
     // Send rejection email to user with reason
     try {
-      const emailContent = emailTemplates.transactionRejected(
-        transactionWithDetails!.user.name,
-        transactionWithDetails!.event.title,
-        transactionWithDetails!.id,
-        reason.trim()
-      )
+      // const emailContent = emailTemplates.transactionRejected(
+      //   transactionWithDetails!.user.name,
+      //   transactionWithDetails!.event.title,
+      //   transactionWithDetails!.id,
+      //   reason.trim()
+      // )
       
-      await sendEmail({
-        to: transactionWithDetails!.user.email,
-        subject: emailContent.subject,
-        html: emailContent.html
-      })
+      // await sendEmail({
+      //   to: transactionWithDetails!.user.email,
+      //   subject: emailContent.subject,
+      //   html: emailContent.html
+      // })
+      console.log('Rejection email would be sent to:', transactionWithDetails!.user.email)
     } catch (emailError) {
       console.error('Failed to send rejection email:', emailError)
       // Don't fail the transaction if email fails

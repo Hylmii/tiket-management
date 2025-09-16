@@ -5,21 +5,22 @@ import { prisma } from '@/lib/prisma'
 import { TransactionsList } from '@/components/profile/transactions-list'
 
 interface TransactionsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     status?: string
-  }
+  }>
 }
 
 export default async function TransactionsPage({ searchParams }: TransactionsPageProps) {
+  const params = await searchParams
   const session = await getServerSession(authOptions)
   
   if (!session) {
     redirect('/auth/signin')
   }
 
-  const page = parseInt(searchParams.page || '1')
-  const status = searchParams.status
+  const page = parseInt(params.page || '1')
+  const status = params.status
   const limit = 10
   const skip = (page - 1) * limit
 

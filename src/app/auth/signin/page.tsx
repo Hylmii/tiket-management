@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 function SignInForm() {
   const [formData, setFormData] = useState({
     email: '',

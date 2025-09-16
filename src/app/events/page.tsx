@@ -4,6 +4,8 @@ import { EventsFilters } from '@/components/events/events-filters'
 import { SearchBar } from '@/components/events/search-bar'
 import { Calendar, Filter } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function EventsPage() {
   return (
     <div className="min-h-screen bg-gray-50">

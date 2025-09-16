@@ -16,16 +16,17 @@ interface SearchParams {
 export default async function AdminTransactionsPage({
   searchParams,
 }: {
-  searchParams: SearchParams
+  searchParams: Promise<SearchParams>
 }) {
+  const params = await searchParams
   const session = await getServerSession(authOptions)
   
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/')
   }
 
-  const page = parseInt(searchParams.page || '1')
-  const status = searchParams.status
+  const page = parseInt(params.page || '1')
+  const status = params.status
   const limit = 20
 
   const where = status && Object.values(TransactionStatus).includes(status.toUpperCase() as TransactionStatus) 

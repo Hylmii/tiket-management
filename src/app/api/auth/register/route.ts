@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
-import { sendEmail, emailTemplates } from '@/lib/email'
+// import { sendEmail, emailTemplates } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -115,12 +115,13 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email
     try {
-      const emailContent = emailTemplates.welcomeEmail(user.name, user.referralNumber)
-      await sendEmail({
-        to: user.email,
-        subject: emailContent.subject,
-        html: emailContent.html
-      })
+      // const emailContent = emailTemplates.welcomeEmail(user.name, user.referralNumber)
+      // await sendEmail({
+      //   to: user.email,
+      //   subject: emailContent.subject,
+      //   html: emailContent.html
+      // })
+      console.log('Welcome email would be sent to:', user.email)
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError)
       // Don't fail registration if email fails
@@ -129,16 +130,17 @@ export async function POST(request: NextRequest) {
     // Send referral reward email to referrer if applicable
     if (referrer) {
       try {
-        const referralEmailContent = emailTemplates.referralReward(
-          referrer.name,
-          user.name,
-          10000
-        )
-        await sendEmail({
-          to: referrer.email,
-          subject: referralEmailContent.subject,
-          html: referralEmailContent.html
-        })
+        // const referralEmailContent = emailTemplates.referralReward(
+        //   referrer.name,
+        //   user.name,
+        //   10000
+        // )
+        // await sendEmail({
+        //   to: referrer.email,
+        //   subject: referralEmailContent.subject,
+        //   html: referralEmailContent.html
+        // })
+        console.log('Referral reward email would be sent to:', referrer.email)
       } catch (emailError) {
         console.error('Failed to send referral reward email:', emailError)
       }

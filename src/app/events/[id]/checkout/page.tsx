@@ -5,31 +5,32 @@ import { prisma } from '@/lib/prisma'
 import { CheckoutForm } from '@/components/checkout/checkout-form'
 
 interface CheckoutPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     ticketType?: string
     quantity?: string
-  }
+  }>
 }
 
 export default async function CheckoutPage({ params, searchParams }: CheckoutPageProps) {
+  const { id } = await params
+  const { ticketType, quantity } = await searchParams
+  
   const session = await getServerSession(authOptions)
   
   if (!session) {
     redirect('/auth/signin')
   }
-
-  const { ticketType, quantity } = searchParams
   
   if (!ticketType || !quantity) {
-    redirect(`/events/${params.id}`)
+    redirect(`/events/${id}`)
   }
 
   // Get event and ticket type details
   const event = await prisma.event.findUnique({
-    where: { id: params.id },
+    where: { id: id },
     include: {
       organizer: {
         select: {
@@ -54,20 +55,20 @@ export default async function CheckoutPage({ params, searchParams }: CheckoutPag
   const quantityNum = parseInt(quantity)
 
   if (quantityNum <= 0 || quantityNum > 5) {
-    redirect(`/events/${params.id}`)
+    redirect(`/events/${id}`)
   }
 
   // Check if event is still available
   const isEventPassed = new Date(event.endDate) < new Date()
   if (isEventPassed) {
-    redirect(`/events/${params.id}`)
+    redirect(`/events/${id}`)
   }
 
   // Calculate available seats - use the available field directly
   const availableSeats = selectedTicketType.available
 
   if (availableSeats < quantityNum) {
-    redirect(`/events/${params.id}`)
+    redirect(`/events/${id}`)
   }
 
   // Get user details

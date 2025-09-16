@@ -5,12 +5,13 @@ import { prisma } from '@/lib/prisma'
 import { TransactionDetail } from '@/components/transactions/transaction-detail'
 
 interface TransactionPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function TransactionPage({ params }: TransactionPageProps) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   
   if (!session) {
@@ -19,7 +20,7 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
 
   const transaction = await prisma.transaction.findUnique({
     where: { 
-      id: params.id,
+      id: id,
       userId: session.user.id, // Ensure user can only see their own transactions
     },
     include: {

@@ -5,10 +5,10 @@ import { existsSync } from 'fs'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    const filename = params.filename
+    const { filename } = await params
     const filepath = join(process.cwd(), 'public', 'uploads', filename)
 
     if (!existsSync(filepath)) {
@@ -40,7 +40,7 @@ export async function GET(
         break
     }
 
-    return new NextResponse(file, {
+    return new NextResponse(new Uint8Array(file), {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable'

@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { UserRole, PointTransactionType } from '@prisma/client'
-import { sendEmail, emailTemplates } from '@/lib/email'
+// import { sendEmail, emailTemplates } from '@/lib/email'
 import { transactions } from '@/lib/transactions'
 
 export async function POST(
@@ -60,17 +60,18 @@ export async function POST(
 
     // Send confirmation email to user
     try {
-      const emailContent = emailTemplates.transactionConfirmed(
-        updatedTransaction!.user.name,
-        updatedTransaction!.event.title,
-        updatedTransaction!.id
-      )
+      // const emailContent = emailTemplates.transactionConfirmed(
+      //   updatedTransaction!.user.name,
+      //   updatedTransaction!.event.title,
+      //   updatedTransaction!.id
+      // )
       
-      await sendEmail({
-        to: updatedTransaction!.user.email,
-        subject: emailContent.subject,
-        html: emailContent.html
-      })
+      // await sendEmail({
+      //   to: updatedTransaction!.user.email,
+      //   subject: emailContent.subject,
+      //   html: emailContent.html
+      // })
+      console.log('Email would be sent to:', updatedTransaction!.user.email)
     } catch (emailError) {
       console.error('Failed to send confirmation email:', emailError)
       // Don't fail the transaction if email fails
