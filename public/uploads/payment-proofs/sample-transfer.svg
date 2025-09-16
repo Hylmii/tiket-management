@@ -1,0 +1,29 @@
+<!-- Sample Payment Proof SVG -->
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f8fafc"/>
+  <rect x="20" y="20" width="360" height="260" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="200" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e293b">
+    BUKTI TRANSFER
+  </text>
+  <text x="50" y="100" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    Nama Pengirim: John Doe
+  </text>
+  <text x="50" y="120" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    Bank: BCA
+  </text>
+  <text x="50" y="140" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    No. Rekening: 1234567890
+  </text>
+  <text x="50" y="160" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    Jumlah: Rp 150.000
+  </text>
+  <text x="50" y="180" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    Tanggal: 17 September 2025
+  </text>
+  <text x="50" y="200" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    Waktu: 02:52
+  </text>
+  <text x="200" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">
+    This is a sample payment proof for testing
+  </text>
+</svg>
