@@ -76,7 +76,7 @@ export default async function TransactionDetailPage({
         description: tt.ticketType.description,
       }
     })),
-    pointsUsed: transaction.pointTransactions
+    pointsUsed: (transaction.pointTransactions || [])
       .filter(pt => pt.points < 0)
       .map(pt => ({
         id: pt.id,

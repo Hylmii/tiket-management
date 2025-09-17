@@ -100,7 +100,7 @@ model Transaction {
   rejectionReason    String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  pointTransactions  PointTransaction?
+  pointTransactions  PointTransaction[]
   transactionTickets TransactionTicket[]
   event              Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -178,7 +178,7 @@ model PointTransaction {
   expiresAt     DateTime?
   createdAt     DateTime             @default(now())
   userId        String
-  transactionId String?              @unique
+  transactionId String?
   transaction   Transaction?         @relation(fields: [transactionId], references: [id])
   user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
