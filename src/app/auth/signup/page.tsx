@@ -61,7 +61,7 @@ function SignUpForm() {
           email: formData.email,
           password: formData.password,
           role: formData.role,
-          referralCode: formData.referralCode || undefined
+          referralCode: formData.referralCode || null
         }),
       })
 

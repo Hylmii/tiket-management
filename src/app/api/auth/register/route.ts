@@ -6,10 +6,13 @@ import { UserRole } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Registration attempt started')
     const { name, email, password, role, referralCode } = await request.json()
+    console.log('Request data:', { name, email, role, referralCode: referralCode ? 'provided' : 'none' })
 
     // Validation
     if (!name || !email || !password) {
+      console.log('Validation failed: missing required fields')
       return NextResponse.json(
         { error: 'Nama, email, dan password wajib diisi' },
         { status: 400 }
@@ -17,6 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (password.length < 6) {
+      console.log('Validation failed: password too short')
       return NextResponse.json(
         { error: 'Password minimal 6 karakter' },
         { status: 400 }
@@ -24,56 +28,75 @@ export async function POST(request: NextRequest) {
     }
 
     if (!Object.values(UserRole).includes(role)) {
+      console.log('Validation failed: invalid role', role)
       return NextResponse.json(
         { error: 'Role tidak valid' },
         { status: 400 }
       )
     }
 
+    console.log('Basic validation passed')
+
     // Check if user already exists
+    console.log('Checking if user exists...')
     const existingUser = await prisma.user.findUnique({
       where: { email }
     })
 
     if (existingUser) {
+      console.log('User already exists with email:', email)
       return NextResponse.json(
         { error: 'Email sudah terdaftar' },
         { status: 400 }
       )
     }
 
+    console.log('User does not exist, proceeding...')
+
     // Verify referral code if provided
     let referrer = null
     if (referralCode) {
+      console.log('Checking referral code:', referralCode)
       referrer = await prisma.user.findUnique({
         where: { referralNumber: referralCode }
       })
 
       if (!referrer) {
+        console.log('Invalid referral code:', referralCode)
         return NextResponse.json(
           { error: 'Kode referral tidak valid' },
           { status: 400 }
         )
       }
+      console.log('Valid referrer found:', referrer.id)
+    } else {
+      console.log('No referral code provided')
     }
 
     // Hash password
+    console.log('Hashing password...')
     const hashedPassword = await bcrypt.hash(password, 10)
+    console.log('Password hashed successfully')
 
     // Create user
+    console.log('Creating user in database...')
+    const userData = {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      referredBy: referrer?.referralNumber ?? null,
+      isEmailVerified: true
+    }
+    console.log('User data to create:', { ...userData, password: '[HIDDEN]' })
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role,
-        referredBy: referrer?.referralNumber,
-        isEmailVerified: true // For MVP, skip email verification
-      }
+      data: userData
     })
+    console.log('User created successfully:', user.id)
 
     // Process referral rewards if applicable
     if (referrer) {
+      console.log('Processing referral rewards...')
       // Give points to referrer (10,000 points)
       await prisma.pointTransaction.create({
         data: {
@@ -84,6 +107,7 @@ export async function POST(request: NextRequest) {
           expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 3 months
         }
       })
+      console.log('Point transaction created for referrer')
 
       // Update referrer's points
       await prisma.user.update({
@@ -94,6 +118,7 @@ export async function POST(request: NextRequest) {
           }
         }
       })
+      console.log('Referrer points updated')
 
       // Create welcome coupon for new user
       const welcomeCoupon = await prisma.coupon.findFirst({
@@ -110,6 +135,9 @@ export async function POST(request: NextRequest) {
             couponId: welcomeCoupon.id
           }
         })
+        console.log('Welcome coupon assigned to new user')
+      } else {
+        console.log('No welcome coupon found')
       }
     }
 
@@ -148,6 +176,7 @@ export async function POST(request: NextRequest) {
 
     // Return success (exclude password from response)
     const { password: _, ...userWithoutPassword } = user
+    console.log('Registration completed successfully for user:', user.id)
 
     return NextResponse.json({
       message: 'Registrasi berhasil',
@@ -156,6 +185,22 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Registration error:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
+    if (error instanceof Error) {
+      // Check for specific Prisma errors
+      if (error.message.includes('Unique constraint')) {
+        return NextResponse.json(
+          { error: 'Email sudah terdaftar' },
+          { status: 400 }
+        )
+      }
+      
+      return NextResponse.json(
+        { error: 'Terjadi kesalahan server: ' + error.message },
+        { status: 500 }
+      )
+    }
     return NextResponse.json(
       { error: 'Terjadi kesalahan server' },
       { status: 500 }
