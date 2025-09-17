@@ -1,4 +1,183 @@
-# 🎫 EventHub - Ticket Management System
+# Ticket Management System
+
+A modern ticket management system built with Next.js, Prisma, and NextAuth.
+
+## Features
+
+- 🎫 Create and manage tickets
+- 👥 User authentication and registration
+- 📊 Dashboard with analytics
+- 🔍 Advanced ticket filtering and search
+- 📧 Email notifications
+- 🏷️ Priority and status management
+
+## Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+3. **Initialize database:**
+   ```bash
+   npm run db:sync
+   npm run db:seed
+   ```
+
+4. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+## Database Management
+
+### Quick Commands
+
+```bash
+# Check if database is locked
+npm run db:check
+
+# Fix database lock issues (recommended)
+npm run db:fix
+
+# Reset database completely
+npm run db:reset
+
+# Sync database schema
+npm run db:sync
+
+# Seed database with initial data
+npm run db:seed
+```
+
+### Troubleshooting Database Issues
+
+If you encounter database errors like "Unable to open the database file":
+
+1. **Quick fix:**
+   ```bash
+   npm run db:fix
+   ```
+
+2. **Manual steps:**
+   ```bash
+   # Check what's locking the database
+   npm run db:check
+   
+   # Kill blocking processes and restart
+   pkill -f "prisma studio"
+   pkill -f "next dev"
+   npm run db:sync
+   npm run dev
+   ```
+
+3. **For persistent issues:**
+   ```bash
+   npm run db:reset
+   npm run db:seed
+   ```
+
+See `DATABASE_TROUBLESHOOTING.md` for detailed troubleshooting guide.
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/                 # Next.js App Router
+│   ├── components/          # React components
+│   ├── lib/                # Utilities and configurations
+│   └── types/              # TypeScript type definitions
+├── prisma/
+│   ├── schema.prisma       # Database schema
+│   ├── seed.ts            # Database seeding
+│   └── migrations/        # Database migrations
+├── public/                # Static assets
+└── scripts/               # Helper scripts
+```
+
+## Environment Variables
+
+```env
+# Database
+DATABASE_URL="file:./dev.db"
+
+# NextAuth
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+
+# Email (optional)
+EMAIL_SERVER_HOST="smtp.example.com"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="your-email@example.com"
+EMAIL_SERVER_PASSWORD="your-password"
+EMAIL_FROM="noreply@example.com"
+```
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage
+
+### Database Scripts
+
+- `npm run db:check` - Check database lock status
+- `npm run db:fix` - Fix common database issues
+- `npm run db:reset` - Reset database (deletes all data)
+- `npm run db:sync` - Sync database schema
+- `npm run db:seed` - Seed database with initial data
+
+## Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## Deployment
+
+1. **Build the application:**
+   ```bash
+   npm run build
+   ```
+
+2. **Set up production database:**
+   - For production, consider using PostgreSQL instead of SQLite
+   - Update `DATABASE_URL` in production environment
+
+3. **Deploy to your platform:**
+   - Vercel (recommended)
+   - Netlify
+   - Self-hosted
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details
 
 A comprehensive event ticket management system built with **Next.js 15**, **TypeScript**, **Prisma**, and **NextAuth.js**. Features role-based access control, payment processing, and admin dashboard.
 

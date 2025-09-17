@@ -10,7 +10,13 @@
     "seed": "tsx prisma/seed.ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "db:check": "./scripts/db-helper.sh check-lock",
+    "db:fix": "./scripts/db-helper.sh fix-lock",
+    "db:reset": "./scripts/db-helper.sh reset",
+    "db:sync": "./scripts/db-helper.sh sync",
+    "db:seed": "./scripts/db-helper.sh seed",
+    "setup:check": "./scripts/setup-check.sh"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
